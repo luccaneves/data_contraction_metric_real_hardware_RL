@@ -1,0 +1,165 @@
+clc
+clear all
+
+
+start_index = 4950;
+end_index = 13000;
+
+title_fontsize = 20;
+axis_fontsize = 40;
+legend_fontsize = 40;
+default_font_size = 40;
+
+
+rise_time_total = 0;
+settling_time_total = 0;
+overshoot_total = 0;
+
+rise_time_array = ones(5, 1);
+settling_time_array = ones(5, 1);
+overshoot_array = ones(5, 1);
+
+rise_time_std = 0;
+settling_time_std = 0;
+overshoot_std = 0;
+
+folder = "PID\";
+file = "20K_step_";
+plot_ = 0;
+
+folders = {"FL/", "SMC/", "FL_RL/", "FL_RL_ONLINE/"};
+size_folders = length(folders);
+files = {"20k_step_", "10k_step_"};
+size_files = length(files);
+plot_ = 0;
+
+for j = 1:size_folders
+
+for k = 1:size_files
+rise_time_array = ones(5, 1);
+settling_time_array = ones(5, 1);
+overshoot_array = ones(5, 1);
+rise_time_total = 0;
+settling_time_total = 0;
+overshoot_total = 0;
+for i=1:5
+    disp(folders{j} + files{k} + int2str(i) + ".mf4")
+    dataAll = mdfRead(folders{j} + files{k} + int2str(i) + ".mf4");
+    %dataAll = mdfRead("dados/pid_rl_20k_3hz.mf4");
+    
+    dataAll = dataAll{1};
+    
+    tempo = dataAll.HostService;
+    tempo = seconds(tempo);
+    F_filter = dataAll.("Model Root/Scope_Force_Load_Filter/In1");
+    
+    Ref = dataAll.("Model Root/ScopeRefSignal/In1");
+
+    [rise_time, settling_time, overshoot] = analyze_step_response(tempo(start_index:end_index)- tempo(start_index), ...
+        Ref(start_index:end_index), ...
+        F_filter(start_index:end_index));
+
+    rise_time_total = rise_time_total +  rise_time/5;
+    settling_time_total = settling_time_total +  settling_time/5;
+    overshoot_total = overshoot_total +  overshoot/5;
+
+    overshoot_array(i) = overshoot;
+    rise_time_array(i) = rise_time;
+    settling_time_array(i) = settling_time;
+    
+end
+rise_time_total
+rise_time_std = std(rise_time_array)
+settling_time_total
+settling_time_std = std(settling_time_array)
+overshoot_total
+overshoot_std = std(overshoot_array)
+end
+end
+
+
+
+
+
+
+
+start_index = 4950;
+end_index = 13000;
+
+title_fontsize = 20;
+axis_fontsize = 40;
+legend_fontsize = 40;
+default_font_size = 40;
+
+
+rise_time_total = 0;
+settling_time_total = 0;
+overshoot_total = 0;
+
+rise_time_array = ones(5, 1);
+settling_time_array = ones(5, 1);
+overshoot_array = ones(5, 1);
+
+rise_time_std = 0;
+settling_time_std = 0;
+overshoot_std = 0;
+
+folder = "PID\";
+file = "20K_step_";
+plot_ = 0;
+
+folders = {"FL/", "SMC/", "FL_RL_ONLINE/"};
+size_folders = length(folders);
+files = {"5k_step_"};
+size_files = length(files);
+plot_ = 0;
+
+for j = 1:size_folders
+
+for k = 1:size_files
+rise_time_array = ones(5, 1);
+settling_time_array = ones(5, 1);
+overshoot_array = ones(5, 1);
+rise_time_total = 0;
+settling_time_total = 0;
+overshoot_total = 0;
+for i=1:5
+    disp(folders{j} + files{k} + int2str(i) + ".mf4")
+    dataAll = mdfRead(folders{j} + files{k} + int2str(i) + ".mf4");
+    %dataAll = mdfRead("dados/pid_rl_20k_3hz.mf4");
+    
+    dataAll = dataAll{1};
+    
+    tempo = dataAll.HostService;
+    tempo = seconds(tempo);
+    F_filter = dataAll.("Model Root/Scope_Force_Load_Filter/In1");
+    
+    Ref = dataAll.("Model Root/ScopeRefSignal/In1");
+
+    [rise_time, settling_time, overshoot] = analyze_step_response(tempo(start_index:end_index)- tempo(start_index), ...
+        Ref(start_index:end_index), ...
+        F_filter(start_index:end_index));
+
+    rise_time_total = rise_time_total +  rise_time/5;
+    settling_time_total = settling_time_total +  settling_time/5;
+    overshoot_total = overshoot_total +  overshoot/5;
+
+    overshoot_array(i) = overshoot;
+    rise_time_array(i) = rise_time;
+    settling_time_array(i) = settling_time;
+    
+end
+rise_time_total
+rise_time_std = std(rise_time_array)
+settling_time_total
+settling_time_std = std(settling_time_array)
+overshoot_total
+overshoot_std = std(overshoot_array)
+end
+end
+
+
+%%
+figure(1)
+plot(tempo,F_filter)
+grid on
