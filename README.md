@@ -8,17 +8,32 @@ This repository contains training scripts and experiment code used for "Safe Rei
 
 **Files of interest**
 - Data and experiments: [Data](Data)
+- Hydraulic model learning: [Data/HydraulicModelLearning](Data/HydraulicModelLearning)
 - Metric learning scripts and models: [Data/LearnContractionMetricScripts](Data/LearnContractionMetricScripts)
 - Real-world RL environments and checkpoints: [Data/Real_Life_FeedbackLin_Train](Data/Real_Life_FeedbackLin_Train) and [Data/Real_Life_Sliding_Mode_Train](Data/Real_Life_Sliding_Mode_Train)
 - Top-level RL environment script: [Data/RL_Train_Environment_Script.py](Data/RL_Train_Environment_Script.py)
 
 Repository structure (high level)
 - Data/: recorded measurements, MATLAB/Simulink models (.slx/.slxc) and experiment folders (FL, SMC, RL variants).
+- Data/HydraulicModelLearning/: Python code for supervised hydraulic model learning.
 - Data/LearnContractionMetricScripts/: training/validation code, model definition and a saved model (`learned_metric.pth`). Key files:
   - [Data/LearnContractionMetricScripts/MetricNet.py](Data/LearnContractionMetricScripts/MetricNet.py)
   - [Data/LearnContractionMetricScripts/train_metric_new.py](Data/LearnContractionMetricScripts/train_metric_new.py)
   - [Data/LearnContractionMetricScripts/validate_contraction.py](Data/LearnContractionMetricScripts/validate_contraction.py)
 - Data/Real_Life_FeedbackLin_Train/ and Data/Real_Life_Sliding_Mode_Train/: environment definitions and saved checkpoints for controller training.
+
+Hydraulic model learning
+- [Data/HydraulicModelLearning/train_model.py](Data/HydraulicModelLearning/train_model.py): trains a multi-step predictor for the hydraulic system with PyTorch.
+- [Data/HydraulicModelLearning/dataset.py](Data/HydraulicModelLearning/dataset.py): builds supervised samples from normalized CSV data, groups trajectories by `t == 0.0`, and uses a 100-step prediction horizon.
+- [Data/HydraulicModelLearning/mlp_lyap_mean_bb.py](Data/HydraulicModelLearning/mlp_lyap_mean_bb.py): defines the neural network used by the training script.
+- [Data/HydraulicModelLearning/model.pth](Data/HydraulicModelLearning/model.pth): saved model weights.
+- [Data/HydraulicModelLearning/experimentsdata_20k_normalizing_constants.json](Data/HydraulicModelLearning/experimentsdata_20k_normalizing_constants.json): normalization constants used by the model.
+
+Training details for the hydraulic model
+- The dataset uses 9 base inputs: actuator force and derivative, load force and derivative, pressures `Pa`/`Pb`, position `x`, velocity `x_deriv`, and current `i`.
+- The model also consumes `last_x` plus a sequence of future current values over the prediction horizon.
+- The target is an 8-variable rollout across 100 future steps: actuator force, actuator force derivative, load force, load force derivative, `Pa`, `Pb`, `x`, and `x_deriv`.
+- Training uses PyTorch, Adam, MSE loss, gradient clipping, checkpointing, and TensorBoard logging.
 
 Prerequisites
 - Python 3.8+ (for the metric training and validation scripts).
@@ -57,5 +72,6 @@ Notes and tips
 - The repository mixes MATLAB/Simulink assets and Python code. Use MATLAB to inspect and simulate `.slx` models, and Python for metric learning and RL experiments.
 - `learned_metric.pth` in [Data/LearnContractionMetricScripts](Data/LearnContractionMetricScripts) is an example pretrained metric — load it from the training/validation scripts.
 - Many experiment recordings are stored as `.mf4` files under `Data/Experiments/FL` and subfolders.
+- The hydraulic model learning scripts expect normalized CSV data with future-step columns such as `F_actuator_1`, `Pa_1`, `x_1`, and so on.
 
 
