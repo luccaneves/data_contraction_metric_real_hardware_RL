@@ -1,6 +1,6 @@
 # data_contraction_metric_real_hardware_RL
 
-This repository contains datasets, training scripts and experiment code used for "Safe Reinforcement Learning Force Control for a Hydraulic Actuator with Real-World Training Using a Learned Contraction Metric". It includes tools to learn a contraction metric from recorded physical experiments and to train/validate controllers (feedback linearization and sliding mode) using that metric.
+This repository contains training scripts and experiment code used for "Safe Reinforcement Learning Force Control for a Hydraulic Actuator with Real-World Training Using a Learned Contraction Metric". It includes tools to learn a contraction metric from recorded physical experiments and to train/validate controllers (feedback linearization and sliding mode) using that metric.
 
 **Quick summary**
 - Purpose: Learn a contraction metric from real hardware data and use it to train safe RL controllers.
