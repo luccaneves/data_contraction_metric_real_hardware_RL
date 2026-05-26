@@ -92,20 +92,20 @@ def main():
 
     dataset = HydraulicDataset(
         csv_file='C:/Users/ic2d/Documents/GitHub/Hyd_Learning/current_branch/train_model_data/data/new_data/' \
-        'experimentsdata_20k_normalized_horizon_100.csv'
+        'experimentsdata_normalized_horizon_70.csv'
         #csv_file='/home/nexus/Documents/GitHub/Hyd_Learning/current_branch/raw_data/0_2025-05-19-senoidal-300A-0.5to3hz/0_2025-05-19-senoidal-300A-0.5to3hz_normalized_with_last_x_feature.csv'
     )
 
     dataloader = torch.utils.data.DataLoader(
         dataset,
-        batch_size=8192,
+        batch_size=4096,
         shuffle=True,
         num_workers=4,
         pin_memory=True
     )
 
     model = BB_Lyap_Mean(
-        hidden_size=64,  # Increased from 64
+        hidden_size=96,  # Increased from 64
         ts = 0.01,
         json_file_path='C:/Users/ic2d/Documents/GitHub/Hyd_Learning/current_branch/train_data_new_mult_env_normalizing_constants.json'
         #json_file_path='/home/nexus/Documents/GitHub/Hyd_Learning/current_branch/raw_data/0_2025-05-19-senoidal-300A-0.5to3hz/0_2025-05-19-senoidal-300A-0.5to3hz_normalizing_constants.json'

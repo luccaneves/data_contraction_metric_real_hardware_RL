@@ -18,8 +18,8 @@ class HydraulicDataset(Dataset):
         ].tolist()
         
         # Base variables
-        base_vars = ["F_actuator", "F_actuator_deriv", "F_load", "F_load_deriv", "Pa", "Pb", "x", "x_deriv", "i"]
-        predict_horizon = 100
+        base_vars = ["F_actuator", "F_actuator_deriv", "Pa", "Pb", "x", "x_deriv", "i", "F_load", "F_load_deriv",]
+        predict_horizon = 40
 
         # Build features
         self.features = base_vars + ["last_x"]
@@ -29,6 +29,42 @@ class HydraulicDataset(Dataset):
                 f"i_{i}",
             ]
 
+        for i in range(1, predict_horizon + 1):
+            self.features += [
+                f"x_{i}"
+        ]
+            
+                    
+        for i in range(1, predict_horizon + 1):
+            self.features += [
+                f"x_deriv_{i}"
+        ]
+            
+        for i in range(1, predict_horizon + 1):
+            self.features += [
+                f"F_load_{i}"
+        ]
+            
+        for i in range(1, predict_horizon + 1):
+            self.features += [
+                f"F_load_deriv_{i}"
+        ]
+            
+        for i in range(1, predict_horizon + 1):
+            self.features += [
+                f"F_actuator_deriv_{i}"
+        ]
+            
+        for i in range(1, predict_horizon + 1):
+            self.features += [
+                f"Pa_{i}"
+        ]
+            
+        for i in range(1, predict_horizon + 1):
+            self.features += [
+                f"Pb_{i}"
+        ]
+
         print(self.features)
 
         # Build targets (without 'i' and 'last_x' unless needed)
@@ -36,14 +72,7 @@ class HydraulicDataset(Dataset):
 
         for i in range(1, predict_horizon + 1):
             self.target += [
-                f"F_actuator_{i}",
-                f"F_actuator_deriv_{i}",
-                f"F_load_{i}",
-                f"F_load_deriv_{i}",
-                f"Pa_{i}",
-                f"Pb_{i}",
-                f"x_{i}",
-                f"x_deriv_{i}"
+                f"F_actuator_{i}"
             ]
 
 
