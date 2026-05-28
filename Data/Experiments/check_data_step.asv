@@ -44,6 +44,7 @@ rise_time_total = 0;
 settling_time_total = 0;
 overshoot_total = 0;
 for i=1:5
+    files{k} + int2str(i)
     disp(folders{j} + files{k} + int2str(i) + ".mf4")
     dataAll = mdfRead(folders{j} + files{k} + int2str(i) + ".mf4");
     %dataAll = mdfRead("dados/pid_rl_20k_3hz.mf4");
